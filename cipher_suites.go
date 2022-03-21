@@ -18,7 +18,6 @@ import (
 	"runtime"
 
 	"golang.org/x/crypto/chacha20poly1305"
-	"golang.org/x/sys/cpu"
 )
 
 // CipherSuite is a TLS cipher suite. Note that most functions in this package
@@ -366,11 +365,10 @@ var defaultCipherSuitesTLS13NoAES = []uint16{
 }
 
 var (
-	hasGCMAsmAMD64 = cpu.X86.HasAES && cpu.X86.HasPCLMULQDQ
-	hasGCMAsmARM64 = cpu.ARM64.HasAES && cpu.ARM64.HasPMULL
+	hasGCMAsmAMD64 = CPUHasAES && CPUHasPCLMULQDQ
+	hasGCMAsmARM64 = CPUHasAES && CPUHasPMULL
 	// Keep in sync with crypto/aes/cipher_s390x.go.
-	hasGCMAsmS390X = cpu.S390X.HasAES && cpu.S390X.HasAESCBC && cpu.S390X.HasAESCTR &&
-		(cpu.S390X.HasGHASH || cpu.S390X.HasAESGCM)
+	hasGCMAsmS390X = CPUHasGCMAsmS390X
 
 	hasAESGCMHardwareSupport = runtime.GOARCH == "amd64" && hasGCMAsmAMD64 ||
 		runtime.GOARCH == "arm64" && hasGCMAsmARM64 ||
